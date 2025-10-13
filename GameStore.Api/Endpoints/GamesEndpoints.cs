@@ -37,7 +37,10 @@ public static class GamesEndpoints
             await repository.CreateAsync(game);
             return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game);
         })
-        .RequireAuthorization();
+        .RequireAuthorization(policy =>
+        {
+            policy.RequireRole("Admin");
+        });
 
         group.MapPut("/{id}", async (IGamesRepository repository, int id, UpdateGameDto updatedGameDto) =>
         {
