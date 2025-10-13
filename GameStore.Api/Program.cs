@@ -11,7 +11,6 @@ builder.Services.AddGameStoreAuthorization();
 var app = builder.Build();
 
 await app.Services.InitializeDbAsync();
-app.Logger.LogInformation(5, "The database is ready!");
 
 app.MapGamesEndpoints();
 
