@@ -28,7 +28,15 @@ public static class GamesEndpoints
                 "Could not process a request on machine {Machine}. TraceId: {TraceId}",
                 Environment.MachineName,
                 Activity.Current?.TraceId);
-                throw;
+
+                return Results.Problem(
+                    title: "We made a mistake but we're working on it!",
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    extensions: new Dictionary<string, object?>
+                    {
+                      {"traced", Activity.Current?.TraceId.ToString()}
+                    }
+                );
             }
         });
 
