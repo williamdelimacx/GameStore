@@ -30,7 +30,7 @@ public class EntityFrameworkGamesRepository : IGamesRepository
         dbContext.Games.Add(game);
         await dbContext.SaveChangesAsync();
 
-        logger.LogInformation($"Created game {game.Name} with price {game.Price}.");
+        logger.LogInformation("Created game {Name} with price {Price}.", game.Name, game.Price);
     }
 
     public async Task UpdateAsync(Game updatedGame)
