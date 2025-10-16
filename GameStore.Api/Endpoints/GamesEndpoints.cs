@@ -16,28 +16,7 @@ public static class GamesEndpoints
 
         group.MapGet("/", async (IGamesRepository repository, ILoggerFactory loggerFactory) =>
         {
-            try
-            {
-                return Results.Ok((await repository.GetAllAsync()).Select(game => game.AsDto()));
-            }
-            catch (Exception ex)
-            {
-                var logger = loggerFactory.CreateLogger("GamesEndpoints");
-                logger.LogError(
-                ex,
-                "Could not process a request on machine {Machine}. TraceId: {TraceId}",
-                Environment.MachineName,
-                Activity.Current?.TraceId);
-
-                return Results.Problem(
-                    title: "We made a mistake but we're working on it!",
-                    statusCode: StatusCodes.Status500InternalServerError,
-                    extensions: new Dictionary<string, object?>
-                    {
-                      {"traced", Activity.Current?.TraceId.ToString()}
-                    }
-                );
-            }
+            return Results.Ok((await repository.GetAllAsync()).Select(game => game.AsDto()));
         });
 
         group.MapGet("/{id}", async (IGamesRepository repository, int id) =>
