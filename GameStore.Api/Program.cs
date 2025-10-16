@@ -10,6 +10,7 @@ builder.Services.AddRepositories(builder.Configuration);
 
 builder.Services.AddAuthentication().AddJwtBearer();
 builder.Services.AddGameStoreAuthorization();
+builder.Services.AddApiVersioning();
 
 builder.Services.AddHttpLogging(logging =>
 {
