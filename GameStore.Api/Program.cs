@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using GameStore.Api.Authorization;
 using GameStore.Api.Data;
 using GameStore.Api.Endpoints;
@@ -15,6 +14,14 @@ builder.Services.AddApiVersioning(options =>
   options.DefaultApiVersion = new(1.0);
   options.AssumeDefaultVersionWhenUnspecified = true;
 });
+builder.Services.AddCors(options => options.AddDefaultPolicy(corsBuilder =>
+{
+  var allowedOrigin = builder.Configuration["AllowedOrigin"]
+              ?? throw new InvalidOperationException("AllowedOrigin is not set");
+  corsBuilder.WithOrigins(allowedOrigin)
+             .AllowAnyHeader()
+             .AllowAnyMethod();
+}));
 
 builder.Services.AddHttpLogging(logging =>
 {
@@ -32,5 +39,6 @@ await app.Services.InitializeDbAsync();
 
 app.UseHttpLogging();
 app.MapGamesEndpoints();
+app.UseCors();
 
 app.Run();
