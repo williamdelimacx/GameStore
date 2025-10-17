@@ -10,11 +10,14 @@ builder.Services.AddRepositories(builder.Configuration);
 
 builder.Services.AddAuthentication().AddJwtBearer();
 builder.Services.AddGameStoreAuthorization();
-builder.Services.AddApiVersioning();
+builder.Services.AddApiVersioning(options =>
+{
+  options.DefaultApiVersion = new(1.0);
+  options.AssumeDefaultVersionWhenUnspecified = true;
+});
 
 builder.Services.AddHttpLogging(logging =>
 {
-  // Added because it was not working properly
   logging.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
 });
 
