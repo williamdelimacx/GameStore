@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using GameStore.Api.Authorization;
 using GameStore.Api.Dtos;
 using GameStore.Api.Entities;
@@ -13,7 +12,7 @@ public static class GamesEndpoints
     public static RouteGroupBuilder MapGamesEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.NewVersionedApi()
-                    .MapGroup("/v{version:apiVersion}/games")
+                    .MapGroup("/games")
                     .HasApiVersion(1.0)
                     .HasApiVersion(2.0)
                     .WithParameterValidation();
