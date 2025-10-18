@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Writers;
 
 namespace GameStore.Api.Authorization;
 
@@ -6,7 +8,8 @@ public static class AuthorizationExtensions
 {
     public static IServiceCollection AddGameStoreAuthorization(this IServiceCollection services)
     {
-        services.AddAuthorization(options =>
+        services.AddScoped<IClaimsTransformation, ScopeTransformation>()
+                .AddAuthorization(options =>
         {
             options.AddPolicy(Policies.ReadAccess, builder =>
                 builder.RequireClaim("scope", "games:read")
