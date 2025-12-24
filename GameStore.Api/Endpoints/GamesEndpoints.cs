@@ -17,9 +17,13 @@ public static class GamesEndpoints
                     .HasApiVersion(2.0)
                     .WithParameterValidation();
 
-        group.MapGet("/", async (IGamesRepository repository, ILoggerFactory loggerFactory) =>
+        group.MapGet("/", async (
+            IGamesRepository repository,
+            ILoggerFactory loggerFactory,
+            [AsParameters] GetGamesDtoV1 request) =>
         {
-            return Results.Ok((await repository.GetAllAsync()).Select(game => game.AsDtoV1()));
+            return Results.Ok((await repository.GetAllAsync(request.PageNumber, request.PageSize))
+                                            .Select(game => game.AsDtoV1()));
         })
         .MapToApiVersion(1.0);
 
@@ -32,9 +36,13 @@ public static class GamesEndpoints
         .RequireAuthorization(Policies.ReadAccess)
         .MapToApiVersion(1.0);
 
-        group.MapGet("/", async (IGamesRepository repository, ILoggerFactory loggerFactory) =>
+        group.MapGet("/", async (
+            IGamesRepository repository,
+            ILoggerFactory loggerFactory,
+            [AsParameters] GetGamesDtoV1 request) =>
         {
-            return Results.Ok((await repository.GetAllAsync()).Select(game => game.AsDtoV2()));
+            return Results.Ok((await repository.GetAllAsync(request.PageNumber, request.PageSize))
+                                            .Select(game => game.AsDtoV2()));
         })
         .MapToApiVersion(2.0);
 
