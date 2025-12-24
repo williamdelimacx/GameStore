@@ -11,6 +11,6 @@ public static class HttpResponseExtensions
       totalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
     };
 
-    response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationHeader));
+    response.Headers["X-Pagination"] = JsonSerializer.Serialize(paginationHeader);
   }
 }
