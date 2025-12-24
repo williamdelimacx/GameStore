@@ -4,7 +4,8 @@ namespace GameStore.Api.Dtos;
 
 public record GetGamesDtoV1(
   int PageNumber = 1,
-  int PageSize = 5
+  int PageSize = 5,
+  string? Filter = null
   );
 
 public record GameDtoV1(
@@ -17,7 +18,8 @@ string ImageUri);
 
 public record GetGamesDtoV2(
   int PageNumber = 1,
-  int PageSize = 5
+  int PageSize = 5,
+  string? Filter = null
   );
 
 public record GameDtoV2(
