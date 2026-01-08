@@ -30,6 +30,11 @@ builder.Services.AddSwaggerGen()
         .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
         .AddEndpointsApiExplorer();
 
+builder.Services.AddSingleton<IImageUploader>(
+ new ImageUploader(
+    new BlobContainerClient(
+        builder.Configuration.GetConnectionString("AzureStorage"), "images"))
+);
 
 var app = builder.Build();
 

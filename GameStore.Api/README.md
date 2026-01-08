@@ -14,3 +14,9 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=$sa_password" -e "MSSQL_PID=
  dotnet user-secrets set "ConnectionStrings:GameStoreContext" "Server=localhost;
  Database=GameStore; User Id=sa; Password=$sa_password;TrustServerCertificate=True"
  `
+
+ ## Setting the Azure Storage connection string to secret storage
+`powershell
+$storage_connstring = "[STORAGE CONN STRING HERE]"
+dotnet user-secrets set "ConnectionStrings:AzureStorage" $storage_connstring
+`
