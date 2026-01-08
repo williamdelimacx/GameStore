@@ -16,7 +16,11 @@ builder.Services.AddRepositories(builder.Configuration);
 builder.Services.AddAuthentication()
                 .AddJwtBearer()
                 .AddJwtBearer("Auth0");
+
 builder.Services.AddGameStoreAuthorization();
+
+builder.Services.AddHttpLogging(options => { });
+
 builder.Services.AddApiVersioning(options =>
 {
   options.DefaultApiVersion = new(1.0);
