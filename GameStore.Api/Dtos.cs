@@ -45,3 +45,5 @@ public record UpdateGameDto(
   [Range(1, 100)] decimal Price,
   DateTime ReleaseDate,
   [Url][StringLength(100)] string ImageUri);
+
+public record ImageUploadDto(string BlobUri);
