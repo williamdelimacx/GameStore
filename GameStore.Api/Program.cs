@@ -40,6 +40,8 @@ builder.Services.AddSingleton<IImageUploader>(
         builder.Configuration.GetConnectionString("AzureStorage"), "images"))
 );
 
+builder.Logging.AddAzureWebAppDiagnostics();
+
 var app = builder.Build();
 
 app.UseExceptionHandler(exceptionHandlerApp =>
