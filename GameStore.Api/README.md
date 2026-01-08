@@ -1,22 +1,19 @@
 # Game Store API
 
 ## Starting SQL Server
-
-`powershell
+```powershell
 $sa_password = "[SA PASSWORD HERE]"
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=$sa_password" -e "MSSQL_PID=Evaluation" -p 1433:1433 -v sqlvolume:/var/opt/mssql --name mssql --hostname sqlpreview -d --rm mcr.microsoft.com/mssql/server:2025-latest
-`
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=$sa_password" -p 1433:1433 -v sqlvolume:/var/opt/mssql -d --rm --name mssql mcr.microsoft.com/mssql/server:2022-latest
+```
 
 ## Setting the connection string to secret manager
+```powershell
+$sa_password = "[SA PASSWORD HERE]"
+dotnet user-secrets set "ConnectionStrings:GameStoreContext" "Server=localhost; Database=GameStore; User Id=sa; Password=$sa_password;TrustServerCertificate=True"
+```
 
-`powershell
- $sa_password = "[SA PASSWORD HERE]"
- dotnet user-secrets set "ConnectionStrings:GameStoreContext" "Server=localhost;
- Database=GameStore; User Id=sa; Password=$sa_password;TrustServerCertificate=True"
- `
-
- ## Setting the Azure Storage connection string to secret storage
-`powershell
+## Setting the Azure Storage connection string to secret manager
+```powershell
 $storage_connstring = "[STORAGE CONN STRING HERE]"
 dotnet user-secrets set "ConnectionStrings:AzureStorage" $storage_connstring
-`
+```

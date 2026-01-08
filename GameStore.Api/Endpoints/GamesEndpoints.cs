@@ -10,15 +10,16 @@ public static class GamesEndpoints
 {
     const string GetGameV1EndpointName = "GetGameV1";
     const string GetGameV2EndpointName = "GetGameV2";
+
     public static RouteGroupBuilder MapGamesEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.NewVersionedApi()
-                    .MapGroup("/games")
-                    .HasApiVersion(1.0)
-                    .HasApiVersion(2.0)
-                    .WithParameterValidation()
-                    .WithOpenApi()
-                    .WithTags("Games");
+                          .MapGroup("/games")
+                          .HasApiVersion(1.0)
+                          .HasApiVersion(2.0)
+                          .WithParameterValidation()
+                          .WithOpenApi()
+                          .WithTags("Games");
 
         group.MapGet("/", async (
             IGamesRepository repository,
@@ -29,14 +30,17 @@ public static class GamesEndpoints
             var totalCount = await repository.CountAsync(request.Filter);
             http.Response.AddPaginationHeader(totalCount, request.PageSize);
 
-            return Results.Ok((await repository.GetAllAsync(request.PageNumber, request.PageSize, request.Filter))
-                                            .Select(game => game.AsDtoV1()));
+            return Results.Ok((await repository.GetAllAsync(
+                request.PageNumber,
+                request.PageSize,
+                request.Filter))
+                .Select(game => game.AsDtoV1()));
         })
         .MapToApiVersion(1.0)
         .WithSummary("Gets all games")
         .WithDescription("Gets all available games and allows filtering and pagination");
 
-        group.MapGet("/{id}", async Task<Results<Ok<GameDtoV1>, NotFound>>(IGamesRepository repository, int id) =>
+        group.MapGet("/{id}", async Task<Results<Ok<GameDtoV1>, NotFound>> (IGamesRepository repository, int id) =>
         {
             Game? game = await repository.GetAsync(id);
             return game is not null ? TypedResults.Ok(game.AsDtoV1()) : TypedResults.NotFound();
@@ -50,20 +54,23 @@ public static class GamesEndpoints
         group.MapGet("/", async (
             IGamesRepository repository,
             ILoggerFactory loggerFactory,
-            [AsParameters] GetGamesDtoV1 request,
+            [AsParameters] GetGamesDtoV2 request,
             HttpContext http) =>
         {
             var totalCount = await repository.CountAsync(request.Filter);
             http.Response.AddPaginationHeader(totalCount, request.PageSize);
 
-            return Results.Ok((await repository.GetAllAsync(request.PageNumber, request.PageSize, request.Filter))
-                                            .Select(game => game.AsDtoV2()));
+            return Results.Ok((await repository.GetAllAsync(
+                request.PageNumber,
+                request.PageSize,
+                request.Filter))
+                .Select(game => game.AsDtoV2()));
         })
         .MapToApiVersion(2.0)
         .WithSummary("Gets all games")
         .WithDescription("Gets all available games and allows filtering and pagination");
 
-        group.MapGet("/{id}", async Task<Results<Ok<GameDtoV2>, NotFound>>(IGamesRepository repository, int id) =>
+        group.MapGet("/{id}", async Task<Results<Ok<GameDtoV2>, NotFound>> (IGamesRepository repository, int id) =>
         {
             Game? game = await repository.GetAsync(id);
             return game is not null ? TypedResults.Ok(game.AsDtoV2()) : TypedResults.NotFound();
@@ -72,9 +79,9 @@ public static class GamesEndpoints
         .RequireAuthorization(Policies.ReadAccess)
         .MapToApiVersion(2.0)
         .WithSummary("Gets a game by id")
-        .WithDescription("Gets the game that has the specified id"); ;
+        .WithDescription("Gets the game that has the specified id");
 
-        group.MapPost("/", async Task<CreatedAtRoute<GameDtoV1>>(IGamesRepository repository, CreateGameDto gameDto) =>
+        group.MapPost("/", async Task<CreatedAtRoute<GameDtoV1>> (IGamesRepository repository, CreateGameDto gameDto) =>
         {
             Game game = new()
             {
@@ -93,7 +100,7 @@ public static class GamesEndpoints
         .WithSummary("Creates a new game")
         .WithDescription("Creates a new game with the specified properties");
 
-        group.MapPut("/{id}", async Task<Results<NotFound, NoContent>>(IGamesRepository repository, int id, UpdateGameDto updatedGameDto) =>
+        group.MapPut("/{id}", async Task<Results<NotFound, NoContent>> (IGamesRepository repository, int id, UpdateGameDto updatedGameDto) =>
         {
             Game? existingGame = await repository.GetAsync(id);
 
@@ -106,7 +113,7 @@ public static class GamesEndpoints
             existingGame.Genre = updatedGameDto.Genre;
             existingGame.Price = updatedGameDto.Price;
             existingGame.ReleaseDate = updatedGameDto.ReleaseDate;
-            existingGame.ImageUri = new(updatedGameDto.ImageUri);
+            existingGame.ImageUri = updatedGameDto.ImageUri;
 
             await repository.UpdateAsync(existingGame);
 

@@ -21,8 +21,8 @@ public class ScopeTransformation : IClaimsTransformation
         var originalIdentity = principal.Identity as ClaimsIdentity;
         var identity = new ClaimsIdentity(originalIdentity);
 
-        var originalScopeClaim = identity.Claims.FirstOrDefault(c => c.Type == scopeClaimName);
-        if (originalScopeClaim != null)
+        var originalScopeClaim = identity.Claims.FirstOrDefault(claim => claim.Type == scopeClaimName);
+        if (originalScopeClaim is not null)
         {
             identity.RemoveClaim(originalScopeClaim);
         }

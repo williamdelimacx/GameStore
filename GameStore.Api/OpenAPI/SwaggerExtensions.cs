@@ -2,22 +2,22 @@ namespace GameStore.Api.OpenAPI;
 
 public static class SwaggerExtensions
 {
-  public static IApplicationBuilder UseGameStoreSwagger(this WebApplication app)
-  {
-    if (app.Environment.IsDevelopment())
+    public static IApplicationBuilder UseGameStoreSwagger(this WebApplication app)
     {
-      app.UseSwagger();
-      app.UseSwaggerUI(
-      options =>
-      {
-        foreach (var description in app.DescribeApiVersions())
+        if (app.Environment.IsDevelopment())
         {
-          var url = $"/swagger/{description.GroupName}/swagger.json";
-          var name = description.GroupName.ToUpperInvariant();
-          options.SwaggerEndpoint(url, name);
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                foreach (var description in app.DescribeApiVersions())
+                {
+                    var url = $"/swagger/{description.GroupName}/swagger.json";
+                    var name = description.GroupName.ToUpperInvariant();
+                    options.SwaggerEndpoint(url, name);
+                }
+            });
         }
-      });
+
+        return app;
     }
-    return app;
-  }
 }

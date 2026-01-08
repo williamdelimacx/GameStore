@@ -23,30 +23,31 @@ builder.Services.AddHttpLogging(options => { });
 
 builder.Services.AddApiVersioning(options =>
 {
-  options.DefaultApiVersion = new(1.0);
-  options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new(1.0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
 })
 .AddApiExplorer(options => options.GroupNameFormat = "'v'VVV");
 
 builder.Services.AddGameStoreCors(builder.Configuration);
 
 builder.Services.AddSwaggerGen()
-        .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
-        .AddEndpointsApiExplorer();
+                .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
+                .AddEndpointsApiExplorer();
 
 builder.Services.AddSingleton<IImageUploader>(
- new ImageUploader(
-    new BlobContainerClient(
-        builder.Configuration.GetConnectionString("AzureStorage"), "images"))
+    new ImageUploader(
+        new BlobContainerClient(
+            builder.Configuration.GetConnectionString("AzureStorage"),
+            "images"
+        )
+    )
 );
 
 builder.Logging.AddAzureWebAppDiagnostics();
 
 var app = builder.Build();
 
-app.UseExceptionHandler(exceptionHandlerApp =>
-exceptionHandlerApp.ConfigureExceptionHandler());
-
+app.UseExceptionHandler(exceptionHandlerApp => exceptionHandlerApp.ConfigureExceptionHandler());
 app.UseMiddleware<RequestTimingMiddleware>();
 
 await app.Services.InitializeDbAsync();

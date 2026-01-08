@@ -11,34 +11,32 @@ public static class ErrorHandlingExtensions
         app.Run(async context =>
         {
             var logger = context.RequestServices.GetRequiredService<ILoggerFactory>()
-                          .CreateLogger("Error Handling");
+                                .CreateLogger("Error Handling");
 
             var exceptionDetails = context.Features.Get<IExceptionHandlerFeature>();
             var exception = exceptionDetails?.Error;
 
-            logger.LogError(
-                exception,
-                "Could not process a request on machine {Machine}.TraceId: {TraceId}",
-                Environment.MachineName,
-                Activity.Current?.Id
-            );
+            logger.LogError(exception, "Could not process a request on machine {Machine}. TraceId: {TraceId}",
+            Environment.MachineName,
+            Activity.Current?.TraceId);
 
             var problem = new ProblemDetails
             {
                 Title = "We made a mistake but we're working on it!",
                 Status = StatusCodes.Status500InternalServerError,
                 Extensions =
-                    {
-                        { "nodeId", Environment.MachineName },
-                        { "traceId", Activity.Current?.Id }
-                    }
+                {
+                    {"traceId", Activity.Current?.TraceId.ToString()}
+                }
             };
 
             var environment = context.RequestServices.GetRequiredService<IHostEnvironment>();
+
             if (environment.IsDevelopment())
             {
                 problem.Detail = exception?.ToString();
             }
+
             await Results.Problem(problem).ExecuteAsync(context);
         });
     }

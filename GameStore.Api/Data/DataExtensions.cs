@@ -13,13 +13,15 @@ public static class DataExtensions
 
         var logger = serviceProvider.GetRequiredService<ILoggerFactory>()
                                     .CreateLogger("DB Initializer");
-        logger.LogInformation(5, "The database is ready");
+        logger.LogInformation(5, "The database is ready!");
     }
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddRepositories(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
         var connString = configuration.GetConnectionString("GameStoreContext");
-
         services.AddSqlServer<GameStoreContext>(connString)
                 .AddScoped<IGamesRepository, EntityFrameworkGamesRepository>();
 

@@ -9,7 +9,9 @@ public class EntityFrameworkGamesRepository : IGamesRepository
     private readonly GameStoreContext dbContext;
     private readonly ILogger<EntityFrameworkGamesRepository> logger;
 
-    public EntityFrameworkGamesRepository(GameStoreContext dbContext, ILogger<EntityFrameworkGamesRepository> logger)
+    public EntityFrameworkGamesRepository(
+        GameStoreContext dbContext,
+        ILogger<EntityFrameworkGamesRepository> logger)
     {
         this.dbContext = dbContext;
         this.logger = logger;
@@ -20,10 +22,10 @@ public class EntityFrameworkGamesRepository : IGamesRepository
         var skipCount = (pageNumber - 1) * pageSize;
 
         return await FilterGames(filter)
-            .OrderBy(game => game.Id)
-            .Skip(skipCount)
-            .Take(pageSize)
-            .AsNoTracking().ToListAsync();
+                    .OrderBy(game => game.Id)
+                    .Skip(skipCount)
+                    .Take(pageSize)
+                    .AsNoTracking().ToListAsync();
     }
 
     public async Task<Game?> GetAsync(int id)
@@ -47,7 +49,8 @@ public class EntityFrameworkGamesRepository : IGamesRepository
 
     public async Task DeleteAsync(int id)
     {
-        await dbContext.Games.Where(game => game.Id == id).ExecuteDeleteAsync();
+        await dbContext.Games.Where(game => game.Id == id)
+                             .ExecuteDeleteAsync();
     }
 
     public async Task<int> CountAsync(string? filter)
@@ -62,6 +65,7 @@ public class EntityFrameworkGamesRepository : IGamesRepository
             return dbContext.Games;
         }
 
-        return dbContext.Games.Where(game => game.Name.Contains(filter) || game.Genre.Contains(filter));
+        return dbContext.Games
+                        .Where(game => game.Name.Contains(filter) || game.Genre.Contains(filter));
     }
 }

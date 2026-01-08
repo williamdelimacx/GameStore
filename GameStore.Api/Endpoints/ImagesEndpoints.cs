@@ -14,21 +14,22 @@ public static class ImagesEndpoints
         return api.MapPost(
             "/images",
             async Task<Results<Ok<ImageUploadDto>, BadRequest>> (IFormFile file, IImageUploader imageUploader) =>
-        {
-            if (file.Length <= 0)
             {
-                return TypedResults.BadRequest();
-            }
+                if (file.Length <= 0)
+                {
+                    return TypedResults.BadRequest();
+                }
 
-            var imageUri = await imageUploader.UploadImageAsync(file);
+                var imageUri = await imageUploader.UploadImageAsync(file);
 
-            return TypedResults.Ok(new ImageUploadDto(imageUri));
-        })
+                return TypedResults.Ok(new ImageUploadDto(imageUri));
+            })
         .RequireAuthorization(Policies.WriteAccess)
         .HasApiVersion(1.0)
         .WithOpenApi()
         .WithSummary("Uploads a file to storage")
         .WithDescription("Uploads a file to storage and returns the url of the uploaded file")
-        .WithTags("Images");
+        .WithTags("Images")
+        .DisableAntiforgery();
     }
 }

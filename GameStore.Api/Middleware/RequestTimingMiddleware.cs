@@ -7,7 +7,9 @@ public class RequestTimingMiddleware
     private readonly RequestDelegate next;
     private readonly ILogger<RequestTimingMiddleware> logger;
 
-    public RequestTimingMiddleware(RequestDelegate next, ILogger<RequestTimingMiddleware> logger)
+    public RequestTimingMiddleware(
+        RequestDelegate next,
+        ILogger<RequestTimingMiddleware> logger)
     {
         this.next = next;
         this.logger = logger;

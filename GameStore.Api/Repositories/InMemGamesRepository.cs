@@ -5,40 +5,35 @@ namespace GameStore.Api.Repositories;
 public class InMemGamesRepository : IGamesRepository
 {
     private readonly List<Game> games = new()
-{
-  new Game()
-  {
-    Id = 1,
-    Name = "Street Fighter II",
-    Genre = "Fighting",
-    Price = 19.99M,
-    ReleaseDate = new DateTime(1991, 2, 1),
-    ImageUri = "https://placehold.co/100 "
- },
-  new Game()
-  {
-    Id =2,
-    Name = "Final Fantasy XIV",
-    Genre = "Roleplaying",
-    Price = 59.99M,
-    ReleaseDate = new DateTime(2010, 9, 30),
-    ImageUri = "https://placehold.co/100 "
-  },
- new Game()
- {
-    Id = 3,
-    Name = "FIFA 23",
-    Genre = "Sports",
-    Price = 69.99M,
-    ReleaseDate = new DateTime(2022, 9, 27),
-    ImageUri = "https://placehold.co/100 "
-  }
-};
-
-    public async Task<IEnumerable<Game>> GetAllAsync()
     {
-        return await Task.FromResult(games);
-    }
+        new Game()
+        {
+            Id = 1,
+            Name = "Street Fighter II",
+            Genre = "Fighting",
+            Price = 19.99M,
+            ReleaseDate = new DateTime(1991, 2, 1),
+            ImageUri = "https://placehold.co/100"
+        },
+        new Game()
+        {
+            Id = 2,
+            Name = "Final Fantasy XIV",
+            Genre = "Roleplaying",
+            Price = 59.99M,
+            ReleaseDate = new DateTime(2010, 9, 30),
+            ImageUri = "https://placehold.co/100"
+        },
+        new Game()
+        {
+            Id = 3,
+            Name = "FIFA 23",
+            Genre = "Sports",
+            Price = 69.99M,
+            ReleaseDate = new DateTime(2022, 9, 27),
+            ImageUri = "https://placehold.co/100"
+        }
+    };
 
     public async Task<IEnumerable<Game>> GetAllAsync(int pageNumber, int pageSize, string? filter)
     {
@@ -49,7 +44,7 @@ public class InMemGamesRepository : IGamesRepository
 
     public async Task<Game?> GetAsync(int id)
     {
-        return await Task.FromResult(games.SingleOrDefault(game => game.Id == id));
+        return await Task.FromResult(games.Find(game => game.Id == id));
     }
 
     public async Task CreateAsync(Game game)
@@ -76,9 +71,9 @@ public class InMemGamesRepository : IGamesRepository
         await Task.CompletedTask;
     }
 
-    public Task<int> CountAsync(string? filter)
+    public async Task<int> CountAsync(string? filter)
     {
-        return Task.FromResult(FilterGames(filter).Count());
+        return await Task.FromResult(FilterGames(filter).Count());
     }
 
     private IEnumerable<Game> FilterGames(string? filter)
