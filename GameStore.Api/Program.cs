@@ -1,8 +1,10 @@
+using Azure.Storage.Blobs;
 using GameStore.Api.Authorization;
 using GameStore.Api.Cors;
 using GameStore.Api.Data;
 using GameStore.Api.Endpoints;
 using GameStore.Api.ErrorHandling;
+using GameStore.Api.ImageUpload;
 using GameStore.Api.Middleware;
 using GameStore.Api.OpenAPI;
 using Microsoft.Extensions.Options;
@@ -28,10 +30,6 @@ builder.Services.AddSwaggerGen()
         .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
         .AddEndpointsApiExplorer();
 
-builder.Services.AddHttpLogging(logging =>
-{
-  logging.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
-});
 
 var app = builder.Build();
 
